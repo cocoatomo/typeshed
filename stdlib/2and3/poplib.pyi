@@ -1,14 +1,16 @@
 # Stubs for poplib (Python 2 and 3)
 
-from mypy_extensions import NoReturn
 import socket
 import ssl
 import sys
-from typing import Any, BinaryIO, Dict, List, Optional, overload, Pattern, Text, Tuple
+from typing import (
+    Any, BinaryIO, Dict, List, NoReturn, Optional, overload, Pattern, Text,
+    Tuple,
+)
 
 _LongResp = Tuple[bytes, List[bytes], int]
 
-class error_proto(Exception): pass
+class error_proto(Exception): ...
 
 POP3_PORT: int
 POP3_SSL_PORT: int

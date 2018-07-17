@@ -10,8 +10,8 @@ if sys.version_info >= (3,):
     from enum import Enum
 
     class PlistFormat(Enum):
-        FMT_XML = ...  # type: PlistFormat
-        FMT_BINARY = ...  # type: PlistFormat
+        FMT_XML = ...
+        FMT_BINARY = ...
     FMT_XML = PlistFormat.FMT_XML
     FMT_BINARY = PlistFormat.FMT_BINARY
 
@@ -46,7 +46,7 @@ if sys.version_info < (3,):
     def readPlistFromString(data: str) -> DictT[str, Any]: ...
     def writePlistToString(rootObject: Mapping[str, Any]) -> str: ...
 
-if sys.version_info >= (3,):
+if sys.version_info < (3, 7):
     class Dict(dict):
         def __getattr__(self, attr: str) -> Any: ...
         def __setattr__(self, attr: str, value: Any) -> None: ...

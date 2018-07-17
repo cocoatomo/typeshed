@@ -1,10 +1,9 @@
 # Stubs for unittest
 
-from mypy_extensions import NoReturn
 from typing import (
-    Any, Callable, ContextManager, Dict, FrozenSet, Generic, Iterable, Iterator,
-    List, Optional, overload, Pattern, Sequence, Set, TextIO, Tuple, Type,
-    TypeVar, Union
+    Any, AnyStr, Callable, Container, ContextManager, Dict, FrozenSet, Generic, Iterable,
+    Iterator, List, NoReturn, Optional, overload, Pattern, Sequence, Set, TextIO,
+    Tuple, Type, TypeVar, Union
 )
 import logging
 import sys
@@ -38,8 +37,7 @@ class TestCase:
     def tearDownClass(cls) -> None: ...
     def run(self, result: Optional[TestResult] = ...) -> TestCase: ...
     def skipTest(self, reason: Any) -> None: ...
-    if sys.version_info >= (3, 4):
-        def subTest(self, msg: Any = ..., **params: Any) -> ContextManager[None]: ...
+    def subTest(self, msg: Any = ..., **params: Any) -> ContextManager[None]: ...
     def debug(self) -> None: ...
     def assertEqual(self, first: Any, second: Any, msg: Any = ...) -> None: ...
     def assertNotEqual(self, first: Any, second: Any,
@@ -51,9 +49,9 @@ class TestCase:
                     msg: Any = ...) -> None: ...
     def assertIsNone(self, expr: Any, msg: Any = ...) -> None: ...
     def assertIsNotNone(self, expr: Any, msg: Any = ...) -> None: ...
-    def assertIn(self, first: _T, second: Iterable[_T],
+    def assertIn(self, member: Any, container: Container[Any],
                  msg: Any = ...) -> None: ...
-    def assertNotIn(self, first: _T, second: Iterable[_T],
+    def assertNotIn(self, member: Any, container: Container[Any],
                     msg: Any = ...) -> None: ...
     def assertIsInstance(self, obj: Any,
                          cls: Union[type, Tuple[type, ...]],
@@ -104,19 +102,18 @@ class TestCase:
     def assertWarnsRegex(self,
                          exception: Union[Type[Warning], Tuple[Type[Warning], ...]],
                          msg: Any = ...) -> _AssertWarnsContext: ...
-    if sys.version_info >= (3, 4):
-        def assertLogs(
-            self, logger: Optional[logging.Logger] = ...,
-            level: Union[int, str, None] = ...
-        ) -> _AssertLogsContext: ...
+    def assertLogs(
+        self, logger: Optional[logging.Logger] = ...,
+        level: Union[int, str, None] = ...
+    ) -> _AssertLogsContext: ...
     def assertAlmostEqual(self, first: float, second: float, places: int = ...,
                           msg: Any = ..., delta: float = ...) -> None: ...
     def assertNotAlmostEqual(self, first: float, second: float,
                              places: int = ..., msg: Any = ...,
                              delta: float = ...) -> None: ...
-    def assertRegex(self, text: str, regex: Union[str, Pattern[str]],
+    def assertRegex(self, text: AnyStr, regex: Union[AnyStr, Pattern[AnyStr]],
                     msg: Any = ...) -> None: ...
-    def assertNotRegex(self, text: str, regex: Union[str, Pattern[str]],
+    def assertNotRegex(self, text: AnyStr, regex: Union[AnyStr, Pattern[AnyStr]],
                        msg: Any = ...) -> None: ...
     def assertCountEqual(self, first: Iterable[Any], second: Iterable[Any],
                          msg: Any = ...) -> None: ...
@@ -171,7 +168,7 @@ class TestCase:
     def assertNotAlmostEquals(self, first: float, second: float,
                               places: int = ..., msg: Any = ...,
                               delta: float = ...) -> None: ...
-    def assertRegexpMatches(self, text: str, regex: Union[str, Pattern[str]],
+    def assertRegexpMatches(self, text: AnyStr, regex: Union[AnyStr, Pattern[AnyStr]],
                             msg: Any = ...) -> None: ...
     @overload
     def assertRaisesRegexp(self,  # type: ignore
@@ -192,7 +189,7 @@ class FunctionTestCase(TestCase):
 class _AssertRaisesContext(Generic[_E]):
     exception = ...  # type: _E
     def __enter__(self) -> _AssertRaisesContext[_E]: ...
-    def __exit__(self, exc_type: Optional[type], exc_val: Optional[Exception],
+    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException],
                  exc_tb: Optional[TracebackType]) -> bool: ...
 
 class _AssertWarnsContext:
@@ -200,14 +197,14 @@ class _AssertWarnsContext:
     filename = ...  # type: str
     lineno = ...  # type: int
     def __enter__(self) -> _AssertWarnsContext: ...
-    def __exit__(self, exc_type: Optional[type], exc_val: Optional[Exception],
+    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException],
                  exc_tb: Optional[TracebackType]) -> bool: ...
 
 class _AssertLogsContext:
     records = ...  # type: List[logging.LogRecord]
     output = ...  # type: List[str]
     def __enter__(self) -> _AssertLogsContext: ...
-    def __exit__(self, exc_type: Optional[type], exc_val: Optional[Exception],
+    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException],
                  exc_tb: Optional[TracebackType]) -> bool: ...
 
 
@@ -274,9 +271,8 @@ class TestResult:
     def addExpectedFailure(self, test: TestCase,
                            err: _SysExcInfoType) -> None: ...
     def addUnexpectedSuccess(self, test: TestCase) -> None: ...
-    if sys.version_info >= (3, 4):
-        def addSubTest(self, test: TestCase, subtest: TestCase,
-                       outcome: Optional[_SysExcInfoType]) -> None: ...
+    def addSubTest(self, test: TestCase, subtest: TestCase,
+                   outcome: Optional[_SysExcInfoType]) -> None: ...
 
 class TextTestResult(TestResult):
     def __init__(self, stream: TextIO, descriptions: bool,
@@ -307,16 +303,12 @@ class TextTestRunner(TestRunner):
                      warnings: Optional[Type[Warning]] = ...) -> None: ...
     def _makeResult(self) -> TestResult: ...
 
-if sys.version_info >= (3, 4):
-    _DefaultTestType = Union[str, Iterable[str], None]
-else:
-    _DefaultTestType = Union[str, None]
-
 # not really documented
 class TestProgram:
     result = ...  # type: TestResult
 
-def main(module: str = ..., defaultTest: _DefaultTestType = ...,
+def main(module: str = ...,
+         defaultTest: Union[str, Iterable[str], None] = ...,
          argv: Optional[List[str]] = ...,
          testRunner: Union[Type[TestRunner], TestRunner, None] = ...,
          testLoader: TestLoader = ..., exit: bool = ..., verbosity: int = ...,

@@ -93,6 +93,8 @@ class RawConfigParser(_parser):
     def read(self, filenames: Union[_Path, Iterable[_Path]],
              encoding: Optional[str] = ...) -> List[str]: ...
 
+    def readfp(self, fp: IO[str], filename: Optional[str] = ...) -> None: ...
+
     def read_file(self, f: Iterable[str], source: Optional[str] = ...) -> None: ...
 
     def read_string(self, string: str, source: str = ...) -> None: ...
@@ -182,12 +184,10 @@ class ConverterMapping(MutableMapping[str, Optional[_converter]]):
     def __len__(self) -> int: ...
 
 
-class Error(Exception):
-    pass
+class Error(Exception): ...
 
 
-class NoSectionError(Error):
-    pass
+class NoSectionError(Error): ...
 
 
 class DuplicateSectionError(Error):
@@ -213,16 +213,14 @@ class InterpolationError(Error):
     option = ...   # type: str
 
 
-class InterpolationDepthError(InterpolationError):
-    pass
+class InterpolationDepthError(InterpolationError): ...
 
 
 class InterpolationMissingOptionError(InterpolationError):
     reference = ...  # type: str
 
 
-class InterpolationSyntaxError(InterpolationError):
-    pass
+class InterpolationSyntaxError(InterpolationError): ...
 
 
 class ParsingError(Error):
