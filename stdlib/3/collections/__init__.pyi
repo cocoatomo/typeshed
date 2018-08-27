@@ -1,7 +1,3 @@
-# Stubs for collections
-
-# Based on http://docs.python.org/3.2/library/collections.html
-
 # These are not exported.
 import sys
 import typing
@@ -54,7 +50,7 @@ _VT = TypeVar('_VT')
 # namedtuple is special-cased in the type checker; the initializer is ignored.
 if sys.version_info >= (3, 7):
     def namedtuple(typename: str, field_names: Union[str, Iterable[str]], *,
-                   rename: bool = ..., module: Optional[str] = ...) -> Type[tuple]: ...
+                   rename: bool = ..., module: Optional[str] = ..., defaults: Optional[Iterable[Any]] = ...) -> Type[tuple]: ...
 elif sys.version_info >= (3, 6):
     def namedtuple(typename: str, field_names: Union[str, Iterable[str]], *,
                    verbose: bool = ..., rename: bool = ..., module: Optional[str] = ...) -> Type[tuple]: ...
@@ -305,7 +301,7 @@ class OrderedDict(Dict[_KT, _VT], Reversible[_KT], Generic[_KT, _VT]):
 _DefaultDictT = TypeVar('_DefaultDictT', bound=defaultdict)
 
 class defaultdict(Dict[_KT, _VT], Generic[_KT, _VT]):
-    default_factory = ...  # type: Callable[[], _VT]
+    default_factory = ...  # type: Optional[Callable[[], _VT]]
 
     @overload
     def __init__(self, **kwargs: _VT) -> None: ...
